@@ -18,11 +18,11 @@ function [MeanR2, RT_diff, Power_detection, Power_difference]=OHBM2015_duration_
 % hrf model using SPM function
 % ---------------------------
 xBF.dt = 0.5;
-xBF.name = 'hrf (with time and dispersion derivative)';
+xBF.name = 'hrf' (with time and dispersion derivative)';
 xBF.length = 32; % over a 20 sec window
 xBF.order = 1;
 xBF.T = 30;
-xBF = spm_get_bf(xBF);
+xBF2 = spm_get_bf(xBF);
 xBF.UNITS = 'secs';
 
 
@@ -87,6 +87,7 @@ for subject =1:20
     x12 = conv(X1,xBF.bf(:,2)); x12 = x12(1:400)+100;
     x13 = conv(X1,xBF.bf(:,3)); x13 = x13(1:400)+100;
     X = [[[x11 x12 x13];zeros(400,3)] [zeros(400,3);[x11 x12 x13]] ones(800,1)];
+    X = [[[x11 x13];zeros(400,2)] [zeros(400,2);[x11 x13]] ones(800,1)];
     b = pinv(X)*Y; Beta2(subject,:) = b([1 4]);
     b1corrected = (sqrt(((b(1)^2)*sum(X(:,1).^2))+((b(2)^2)*sum(X(:,2).^2))+((b(3)^2)*sum(X(:,3).^2))))*sign(b(1));
     b4corrected = (sqrt(((b(4)^2)*sum(X(:,4).^2))+((b(5)^2)*sum(X(:,5).^2))+((b(6)^2)*sum(X(:,6).^2))))*sign(b(4));
